@@ -11,10 +11,11 @@ t_outlier_test(x, data, ...)
 
 \method{t_outlier_test}{default}(...)
 
-\method{t_outlier_test}{formula}(x, data, method, remove = TRUE,
-  verbose = TRUE, ...)
+\method{t_outlier_test}{formula}(x, data, method, std_err = 3,
+  remove = TRUE, verbose = TRUE, ...)
 
-\method{t_outlier_test}{recipe}(x, data, method, verbose = T, ...)
+\method{t_outlier_test}{recipe}(x, data, method, std_err = 3,
+  remove = TRUE, verbose = TRUE, ...)
 }
 \arguments{
 \item{x}{Either a recipe or a formula. Depending on x type, the appropriate
@@ -25,6 +26,8 @@ fuction is called.}
 \item{...}{Additional arguments for caret::train.}
 
 \item{method}{A list of lists. Each sublists contain the method name and some related arguments.}
+
+\item{std_err}{Integer. Which specifies how far from the mean a sample should be for being considered as an outlier.}
 
 \item{remove}{Boolean. Default TRUE. If TRUE, then the function returns a new dataset minus the assessed outliers. Otherwise, it returns a logical atomic vector specifying -  by the boolean value False - which data is an outlier.}
 
