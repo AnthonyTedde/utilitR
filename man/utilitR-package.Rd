@@ -6,6 +6,8 @@
 \alias{utilitR-package}
 \title{utilitR: What the Package Does (Title Case)}
 \description{
+\if{html}{\figure{logo.png}{options: align='right'}}
+
 More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 }

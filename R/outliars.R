@@ -43,61 +43,7 @@ outliars <- function(data,
   else outliars_subset
 }
 
-#' Title
-#'
-#' @param formula depedent var ~ independent ones.
-#' @param data Candidate data.
-#' @param method List of methods to apply.
-#' @param ...
-#'
-#' @return a logical atomic vector of row outliers based on the combination of
-#' all performed t-test outliers detection.
-#' @export
-#'
-#' @examples
-t_test_outlier <- function(formula, data, method, verbose = T, ...){
 
-
-  ###################################
-  # Create the formula based on y
-  ###################################
-
-  f <- dplyr::enquo(formula) %>%
-    dplyr::as_label() %>% formula
-
-  method %>% purrr::map(.f = function(m){
-
-    outliers <- rep(T, nrow(data))
-    ctrl <- caret::trainControl(method = "cv")
-
-    if(verbose)
-      utilitR::log_message(message = m$method)
-
-    repeat{
-
-      arguments <- c(list(
-        form = f,
-        data = data[outliers, ],
-        preProcess = c("center", "scale", "nzv"),
-        trControl = ctrl
-      ), m)
-
-      data_model <- do.call(caret::train, arguments)
-
-      data_prediction <- predict(data_model, data[outliers, ])
-      residuals <- data_model$trainingData$.outcome - data_prediction
-
-      outliers_current <- utilitR::outliars(data.frame(residuals), remove = F)
-
-      if(all(outliers_current)) break
-      else outliers[which(outliers)[which(!outliers_current)]] <- F
-
-
-    } # End of the repeat loop
-    return(outliers)
-  }) %>%
-    Reduce(f = `*`) %>% as.logical
-}
 
 #' Remove row outliers based on the standardized Mahalanobis distance of
 #' data points.

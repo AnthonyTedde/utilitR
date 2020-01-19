@@ -13,6 +13,7 @@ RoxygenNote: 6.1.1
 Imports: dplyr,
           purrr,
           caret,
-          tibble
+          tibble,
+          recipes
 Suggests: 
     testthat

@@ -21,6 +21,3 @@ See remove argument.
 \description{
 Outlier detection for quantitative data
 }
-\examples{
-
-}
