@@ -44,6 +44,9 @@ t_outlier_test.default <- function(...){
 t_outlier_test.formula <- function(x,
                                    data,
                                    method,
+                                   group,
+                                   k,
+                                   predictors = dplyr::everything(),
                                    std_err = 3,
                                    remove = TRUE,
                                    verbose = TRUE,
@@ -54,6 +57,9 @@ t_outlier_test.formula <- function(x,
   t_outlier_test_internal(x = f,
                           data = data,
                           method = method,
+                          group = group,
+                          k = k,
+                          predictors = predictors,
                           std_err = std_err,
                           remove = remove,
                           verbose = verbose,
@@ -68,6 +74,9 @@ t_outlier_test.formula <- function(x,
 t_outlier_test.recipe <- function(x,
                                   data,
                                   method,
+                                  group,
+                                  k,
+                                  predictors = dplyr::everything(),
                                   std_err = 3,
                                   remove = TRUE,
                                   verbose = TRUE,
@@ -76,6 +85,9 @@ t_outlier_test.recipe <- function(x,
   t_outlier_test_internal(x = x,
                           data = data,
                           method = method,
+                          group = group,
+                          k = k,
+                          predictors = predictors,
                           std_err = std_err,
                           remove = remove,
                           verbose = verbose,
@@ -89,10 +101,15 @@ t_outlier_test.recipe <- function(x,
 t_outlier_test_internal <- function(x,
                                    data,
                                    method,
+                                   group = NULL,
+                                   k = NULL,
+                                   predictors = dplyr::everything(),
                                    std_err = 3,
                                    remove = TRUE,
                                    verbose = TRUE,
                                    ...){
+
+  data_calib <- data %>% dplyr::select(predictors)
 
   method %>% purrr::map(.f = function(m){
 
@@ -107,14 +124,31 @@ t_outlier_test_internal <- function(x,
       arguments <- c(
         list(
           x,
-          data = data[outliers, ]
+          data = data_calib[outliers, ]
         ), m, list(...)
       )
+
+      if(!purrr::is_empty(group)){
+        tryCatch({
+
+          fold_maxsize <- data[[group]] %>% unique %>% length
+          k <- ifelse(is.numeric(k) && k < fold_maxsize, k, fold_maxsize)
+
+          index <- caret::groupKFold(data[[group]], k = k)
+          arguments <- c(
+            arguments,
+            trControl = caret::trainControl(method = "cv",
+                                            index = index)
+          )
+        }, error = function(e){
+          stop(e)
+        })
+      }
 
       ### call caret::train
       model_calibration <- do.call(caret::train, arguments)
 
-      predicted_data <- predict(model_calibration, data[outliers, ])
+      predicted_data <- predict(model_calibration, data_calib[outliers, ])
       Y <- outcome(model_calibration)
 
       residuals <- Y - predicted_data
