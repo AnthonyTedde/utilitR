@@ -135,14 +135,12 @@ t_outlier_test_internal <- function(x,
           index <- caret::groupKFold(data[[group]], k = k)
           arguments <- c(
             arguments,
-            trControl = caret::trainControl(method = "cv",
-                                            index = index)
+            list(trControl = caret::trainControl(index = index))
           )
         }, error = function(e){
           stop(e)
         })
       }
-
       ### call caret::train
       model_calibration <- do.call(caret::train, arguments)
 
