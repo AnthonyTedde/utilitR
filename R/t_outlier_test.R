@@ -44,26 +44,26 @@ t_outlier_test.default <- function(...){
 t_outlier_test.formula <- function(x,
                                    data,
                                    method,
-                                   group,
-                                   k,
+                                   group = NULL,
+                                   k = NULL,
                                    predictors = dplyr::everything(),
                                    std_err = 3,
                                    remove = TRUE,
                                    verbose = TRUE,
                                    ...){
 
-  f <- dplyr::enquo(x) %>%
+  keep_ellipsis <- grepl("^[.]{3}$", names(formals()))
+
+  ellipsis <- list(...)
+  .args <- mget(names(formals())[!keep_ellipsis],
+                envir = sys.frame(sys.nframe()))
+  .args <- switch(2 - purrr::is_empty(ellipsis), .args, c(.args, ellipsis))
+
+  .args$x <- dplyr::enquo(x) %>%
     dplyr::as_label() %>% formula
-  t_outlier_test_internal(x = f,
-                          data = data,
-                          method = method,
-                          group = group,
-                          k = k,
-                          predictors = predictors,
-                          std_err = std_err,
-                          remove = remove,
-                          verbose = verbose,
-                          ...)
+
+  do.call(what = "t_outlier_test_internal", args = .args)
+
 }
 
 
@@ -82,16 +82,14 @@ t_outlier_test.recipe <- function(x,
                                   verbose = TRUE,
                                   ...){
 
-  t_outlier_test_internal(x = x,
-                          data = data,
-                          method = method,
-                          group = group,
-                          k = k,
-                          predictors = predictors,
-                          std_err = std_err,
-                          remove = remove,
-                          verbose = verbose,
-                          ...)
+  keep_ellipsis <- grepl("^[.]{3}$", names(formals()))
+
+  ellipsis <- list(...)
+  .args <- mget(names(formals())[!keep_ellipsis],
+                envir = sys.frame(sys.nframe()))
+  .args <- switch(2 - purrr::is_empty(ellipsis), .args, c(.args, ellipsis))
+
+  do.call(what = "t_outlier_test_internal", args = .args)
 
 }
 

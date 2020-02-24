@@ -11,9 +11,9 @@ t_outlier_test(x, data, ...)
 
 \method{t_outlier_test}{default}(...)
 
-\method{t_outlier_test}{formula}(x, data, method, group, k,
-  predictors = dplyr::everything(), std_err = 3, remove = TRUE,
-  verbose = TRUE, ...)
+\method{t_outlier_test}{formula}(x, data, method, group = NULL,
+  k = NULL, predictors = dplyr::everything(), std_err = 3,
+  remove = TRUE, verbose = TRUE, ...)
 
 \method{t_outlier_test}{recipe}(x, data, method, group, k,
   predictors = dplyr::everything(), std_err = 3, remove = TRUE,
