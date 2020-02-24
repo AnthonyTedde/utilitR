@@ -135,7 +135,8 @@ t_outlier_test_internal <- function(x,
           index <- caret::groupKFold(data[outliers, ][[group]], k = k)
           arguments <- c(
             arguments,
-            list(trControl = caret::trainControl(index = index))
+            list(trControl = caret::trainControl(method = "cv",
+                                                 index = index))
           )
         }, error = function(e){
           stop(e)
