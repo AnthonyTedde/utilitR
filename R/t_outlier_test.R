@@ -129,10 +129,10 @@ t_outlier_test_internal <- function(x,
       if(!purrr::is_empty(group)){
         tryCatch({
 
-          fold_maxsize <- data[[group]] %>% unique %>% length
+          fold_maxsize <- data[outliers, ][[group]] %>% unique %>% length
           k <- ifelse(is.numeric(k) && k < fold_maxsize, k, fold_maxsize)
 
-          index <- caret::groupKFold(data[[group]], k = k)
+          index <- caret::groupKFold(data[outliers, ][[group]], k = k)
           arguments <- c(
             arguments,
             list(trControl = caret::trainControl(index = index))
