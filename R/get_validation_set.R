@@ -8,6 +8,7 @@
 #' @param bound Integer. Lower and upper boundary of data proportion to
 #' be covered by the validation set.
 #' @param group Character. Pivot variable which discriminate each group.
+#' @param predicate Function. Function to use for subset selection
 #'
 #' @return
 #' @export
@@ -17,8 +18,23 @@ get_validation_set <- function(data,
                                variables = dplyr::everything(),
                                bound = c(0.10, 0.20),
                                group){
+
+  ##############################################################################
+  # Create and check boundary
+  # TODO:
+  #       * Check if boundary are between 0 and 1
+  #       * Not only consider a proportion but also a number of data
+  ##############################################################################
+
   lower <- min(bound)
   upper <- max(bound)
+  lower <- ifelse(lower == upper, 0, lower)
+
+
+
+  ##############################################################################
+  #
+  ##############################################################################
 
   data_prop <- data %>%
     dplyr::count(!!!dplyr::syms(group)) %>%
@@ -28,8 +44,14 @@ get_validation_set <- function(data,
     purrr::map(combn, x = data_prop[[group]], simplify = F) %>%
     purrr::reduce(c)
 
-  sub_data_lst <- groupset_combination_lst %>%
+  group_max_length <- length(groupset_combination_lst)
+  n <- ifelse(n > group_max_length | 0, group_max_length, n)
+
+  groupset_combination_fnl_lst <- groupset_combination_lst
+
+  sub_data_lst <- groupset_combination_fnl_lst %>%
     purrr::map(~dplyr::filter(data_prop, data_prop[[group]] %in% .x))
+
 
   subset_lgl <- sub_data_lst %>%
     purrr::map(dplyr::pull, prop) %>%
@@ -69,13 +91,20 @@ get_validation_set <- function(data,
       data_test_pca <- predict(data_train_pca_preproc, data_split_lst$test) %>%
         tibble::as_tibble()
 
+      covariance <- cov(data_test_pca)/2 + cov(data_train_pca)/2
+
       pc_test_mahalanobis <- data_test_pca %>%
-        mahalanobis(., center = colMeans(data_train_pca), cov = cov(.))
+        mahalanobis(
+          .,
+          center = colMeans(data_train_pca),
+          cov = covariance
+        )
 
       ### Standardization
       pc_test_mahalanobis / ncol(data_test_pca)
 
     })
+
 
   return(list(
     subsets = subset_final,

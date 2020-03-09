@@ -5,11 +5,21 @@
 \title{Get validation set}
 \usage{
 get_validation_set(data, variables = dplyr::everything(),
-  bound = c(0.1, 0.2), group = "expl_id")
+  bound = c(0.1, 0.2), group)
 }
 \arguments{
-\item{group}{}
+\item{data}{Data.frame. Candidate data.frame.}
+
+\item{variables}{Character. What variables to consider in PCA.}
+
+\item{bound}{Integer. Lower and upper boundary of data proportion to
+be covered by the validation set.}
+
+\item{group}{Character. Pivot variable which discriminate each group.}
+
+\item{predicate}{Function. Function to use for subset selection}
 }
 \description{
-Get validation set
+Creation of validation sets based on some criterions, such as the proportion
+of data going to the validation set `bound` ans
 }
