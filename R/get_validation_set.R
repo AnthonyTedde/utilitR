@@ -44,9 +44,6 @@ get_validation_set <- function(data,
     purrr::map(combn, x = data_prop[[group]], simplify = F) %>%
     purrr::reduce(c)
 
-  group_max_length <- length(groupset_combination_lst)
-  n <- ifelse(n > group_max_length | 0, group_max_length, n)
-
   groupset_combination_fnl_lst <- groupset_combination_lst
 
   sub_data_lst <- groupset_combination_fnl_lst %>%
@@ -68,7 +65,7 @@ get_validation_set <- function(data,
       # data split
       ###################################
       data_split_lst <- data %>%
-        dplyr::mutate(pivot = expl_id %in% x) %>%
+        dplyr::mutate(pivot = data[[group]] %in% x) %>%
         dplyr::group_by(pivot) %>%
         dplyr::group_split() %>%
         purrr::map(dplyr::select, variables) %>%
