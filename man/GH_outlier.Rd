@@ -4,8 +4,14 @@
 \alias{GH_outlier}
 \title{Outlier detection for quantitative data based on standardized Mahalanobis distance}
 \usage{
-GH_outlier(data, variables = dplyr::everything(), std_err = 3,
-  remove = TRUE, verbose = TRUE, ...)
+GH_outlier(
+  data,
+  variables = dplyr::everything(),
+  std_err = 3,
+  remove = TRUE,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{Data.frame. Candidate data for outliers detection.}

@@ -4,8 +4,12 @@
 \alias{get_validation_set}
 \title{Get validation set}
 \usage{
-get_validation_set(data, variables = dplyr::everything(),
-  bound = c(0.1, 0.2), group)
+get_validation_set(
+  data,
+  variables = dplyr::everything(),
+  bound = c(0.1, 0.2),
+  group
+)
 }
 \arguments{
 \item{data}{Data.frame. Candidate data.frame.}
@@ -18,6 +22,9 @@ be covered by the validation set.}
 \item{group}{Character. Pivot variable which discriminate each group.}
 
 \item{predicate}{Function. Function to use for subset selection}
+}
+\value{
+
 }
 \description{
 Creation of validation sets based on some criterions, such as the proportion

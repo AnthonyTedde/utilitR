@@ -9,6 +9,9 @@ log_message(message, title = T)
 \arguments{
 \item{title}{}
 }
+\value{
+
+}
 \description{
 Title
 }

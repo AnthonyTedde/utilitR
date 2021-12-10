@@ -9,6 +9,9 @@ barycenter_distance(master, ..., column = dplyr::everything())
 \arguments{
 \item{column}{}
 }
+\value{
+
+}
 \description{
 Compute the barycenter distance
 }
