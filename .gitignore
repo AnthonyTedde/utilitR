@@ -2,3 +2,4 @@ data
 .Rbuildignore
 .Rdata
 **/*.Rproj.user
+.Rproj.user
