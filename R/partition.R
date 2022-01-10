@@ -17,14 +17,17 @@ create_kfold <- function(X, k = 10, strata, seed){
   create_kfold_closure <- function(x){
     partition_size <- floor(x / k)
     remainder <- x %% k
-    c(rep(1:k, partition_size), sample(k, size = remainder))
+    # Partition_item is the vector of the fold ids. Try the best to have
+    # sensitively the same number of items by fold
+    partition_item <- c(rep(1:k, partition_size), sample(k, size = remainder))
+    # Return a randomized vector of items
+    sample(partition_item, size = length(partition_item))
   }
   # -- Closure function that create the data partitions -- #
 
   # -- Do the data partitions need to be stratified ? -- ####
   if(missing(strata)){
     K <- create_kfold_closure(nrow(X))
-    sample(K, size = length(K))
   }else{
     id <- X[[strata]]
     id_ord <- order(id)
