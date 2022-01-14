@@ -48,3 +48,21 @@ create_alpha_index <- function(n = 10, prefix, sep = "_"){
     paste(prefix, idx, sep = sep)
   }else idx
 }
+
+
+#' Title Turning factor variables from a data.frame into integer.
+#'
+#' @param data A data.frame in which there are factor to transform.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+factor_to_integer <- function(data){
+  factor_col <- names(data)[sapply(data, is.factor)]
+  if(length(factor_col > 0)){
+    message("Factor additional columns were turned into integer.")
+    data[,factor_col] <- lapply(data[, factor_col, drop = F], as.integer)
+  }
+  return(data)
+}
